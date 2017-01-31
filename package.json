@@ -1,0 +1,9 @@
+{
+  "name": "almighty_app",
+  "version": "0.0.1",
+  "description": "Data crounching application for the CanSat competition; based on reactjs and electron",
+  "main": "index.js",
+  "repository": {},
+  "author": "James Bohacek <jamesbohacek@outlook.com>",
+  "license": "MIT"
+}
