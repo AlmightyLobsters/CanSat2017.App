@@ -1,7 +1,8 @@
-/.vscode
-/private
+# VSCode
+.vscode
 
-desktop.ini
+# Not for public
+private
 
 # Logs
 logs
@@ -28,8 +29,9 @@ coverage
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+# Build
+build
+build.js
 
 # Dependency directories
 node_modules
@@ -40,3 +42,12 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+# Additional stuff
+desktop.ini
+dist
+lib
+cache
+.cache
+.DS_Store
+_old_
