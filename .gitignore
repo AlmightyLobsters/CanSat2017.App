@@ -45,9 +45,5 @@ jspm_packages
 
 # Additional stuff
 desktop.ini
-dist
-lib
-cache
-.cache
 .DS_Store
-_old_
+dist
