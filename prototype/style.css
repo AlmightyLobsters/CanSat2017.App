@@ -1,0 +1,72 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: #fff;
+    font-family: 'Segoe UI Light', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: row;
+}
+
+.Sidebar {
+    background: #700;
+    display: flex;
+    width: 30%;
+}
+
+menu {
+    background: #a00;
+}
+
+.Dashboard {
+    background: #070;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+.Alt_Wrapper {
+    background: #0a0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.Altitude {
+    background: #0f0;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+#Relative_Altitude {
+    font-family: 'Novecento Semi-Light';
+    font-size: 15vh;
+    text-decoration: underline;
+    display: flex;
+}
+
+#Estimate {
+    display: flex;
+}
+
+.Values {
+    display: flex;
+    flex: row nowrap;
+}
+
+.Values-left {
+    width: 50%;
+}
+
+.Values-right {
+    width: 50%;
+}
+
+@font-face {
+    font-family: 'Novecento Semi-Light';
+    src: url('../public/fonts/Novecentosanswide-Book.otf');
+}
