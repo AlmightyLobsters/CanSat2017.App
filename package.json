@@ -5,7 +5,7 @@
   "main": "init.js",
   "scripts": {
     "postinstall": "install-app-deps",
-    "serve": "npm run private:compile -- --source-maps true && run-p -r private:watch private:serve",
+    "serve": "yarn run private:compile -- --source-maps true && run-p -r private:watch private:serve",
     "test": "mocha -R spec --compilers js:babel-core/register",
     "lint": "eslint --no-ignore scripts app test *.js",
     "pack": "run-s private:clean private:compile private:build:all",
@@ -16,7 +16,7 @@
     "private:build:mac": "build --mac",
     "private:build:win": "build --win",
     "private:build:linux": "build --linux",
-    "private:watch": "npm run private:compile -- --source-maps true --watch --skip-initial-build",
+    "private:watch": "yarn run private:compile -- --source-maps true --watch --skip-initial-build",
     "private:serve": "babel-node scripts/serve.js",
     "private:compile": "babel app/ --copy-files --out-dir build",
     "private:clean": "rimraf build"
@@ -65,7 +65,7 @@
     "eslint": "^3.14.1",
     "eslint-plugin-react": "^6.9.0",
     "mocha": "^3.2.0",
-    "npm-run-all": "^4.0.1",
+    "yarn-run-all": "^4.0.1",
     "rimraf": "^2.5.4"
   }
 }
