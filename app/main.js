@@ -24,9 +24,9 @@ const installExtensions = async () => {
 };
 
 crashReporter.start({
-  productName: 'YourName',
-  companyName: 'YourCompany',
-  submitURL: 'https://your-domain.com/url-to-submit',
+  productName: 'AlmightyApp',
+  companyName: 'AlmightyLobsters',
+  submitURL: 'http://almighty.lobsters.tech',
   uploadToServer: false
 });
 
