@@ -10,28 +10,28 @@ import userActions from './actions/user';
 const router = routerMiddleware(hashHistory);
 
 const actionCreators = {
-  ...userActions,
-  push
+    ...userActions,
+    push
 };
 
 const reducers = {
-  user,
-  routing
+    user,
+    routing
 };
 
 const middlewares = [ thunk, router ];
 
 const composeEnhancers = (() => {
-  const compose_ = window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-  if(process.env.NODE_ENV === 'development' && compose_) {
-    return compose_({ actionCreators });
-  }
-  return compose;
+    const compose_ = window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+    if(process.env.NODE_ENV === 'development' && compose_) {
+        return compose_({ actionCreators });
+    }
+    return compose;
 })();
 
 export default function configureStore(initialState) {
-  const enhancer = composeEnhancers(applyMiddleware(...middlewares), persistState());
-  const rootReducer = combineReducers(reducers);
-  
-  return createStore(rootReducer, initialState, enhancer);
+    const enhancer = composeEnhancers(applyMiddleware(...middlewares), persistState());
+    const rootReducer = combineReducers(reducers);
+
+    return createStore(rootReducer, initialState, enhancer);
 }

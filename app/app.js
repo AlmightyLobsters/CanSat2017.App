@@ -13,8 +13,8 @@ const routerHistory = syncHistoryWithStore(hashHistory, store);
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router history={routerHistory} routes={routes} />
-  </Provider>,
+    <Provider store={store}>
+        <Router history={routerHistory} routes={routes} />
+    </Provider>,
   rootElement
 );
