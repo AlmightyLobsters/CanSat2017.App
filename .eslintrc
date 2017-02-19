@@ -10,7 +10,7 @@
       "modules": true
     }
   },
-  "plugins": [ "react" ],
+  "plugins": [ "react", "import" ],
   "rules": {
     "indent": [ 2, 4 ],
     "quotes": [ 2, "single" ],
@@ -22,9 +22,18 @@
     "no-param-reassign": [ 0 ],
     "func-names": [ 0 ],
     "comma-dangle": [ 0 ],
+    "no-unused-vars": [2, { "args": "none" }],
     "no-unused-expressions" : [ 0 ], // until fixed https://github.com/babel/babel-eslint/issues/158
     "block-scoped-var": [ 0 ], // until fixed https://github.com/eslint/eslint/issues/2253
-    "react/prop-types": [ 0 ]
+    "import/no-extraneous-dependencies": [ 2, {"devDependencies": true} ],
+    "react/prop-types": [ 0 ],
+    "react/prefer-stateless-function": [ 1 ],
+    "react/jsx-uses-react": [ 1 ],
+    "react/jsx-uses-vars": 1,
+    "react/jsx-filename-extension": [ 2, {"extensions": [".jsx", ".js"]} ],
+    "react/jsx-indent": [ 2, 4 ],
+    "react/react-in-jsx-scope": [ 2 ]
+
   },
   "env": {
     "es6": true,
