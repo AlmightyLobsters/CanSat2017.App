@@ -1,7 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-export const Terminal = _ => (
-    <div id="Terminal">
-        
+const Terminal = _ => (
+    <div id="terminal">
+        <h1>Terminal</h1>
     </div>
 );
+
+export default connect(store => ({
+
+}))(Terminal);
