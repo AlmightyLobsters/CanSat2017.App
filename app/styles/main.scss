@@ -1,3 +1,12 @@
 body {
     background: red;
 }
+
+@import "./components/App";
+@import "./components/Dashboard";
+@import "./components/Gallery";
+@import "./components/Graphs";
+@import "./components/Map";
+@import "./components/Settings";
+@import "./components/Sidebar";
+@import "./components/Terminal";
