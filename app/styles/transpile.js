@@ -9,6 +9,7 @@ module.exports = function transpile(cb) {
     }, (err, result) => {
         if(err) console.log(err);
         else {
+            if (!fs.existsSync(join(__dirname, '../../build'))) fs.mkdirSync(join(__dirname, '../../build'));
             if (!fs.existsSync(join(__dirname, '../../build/styles'))) fs.mkdirSync(join(__dirname, '../../build/styles'));
             fs.writeFile(join(__dirname, '../../build/styles/main.css'), result.css, err => {
                 if (err) console.error(err);
