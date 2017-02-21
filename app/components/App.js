@@ -1,9 +1,13 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 
-export const App = ({ children }) => (
+const App = ({ children }) => (
     <div id="app">
         <Sidebar />
-        {children}
+        <div id="detail">
+            {children}
+        </div>
     </div>
 );
+
+export default App;
