@@ -5,22 +5,22 @@ const Sidebar = _ => (
     <div id="sidebar">
         <ul className="navbar">
             <li>
-                <Link to="/">Dashboard</Link>
+                <Link to="/"><i className="fa fa-tachometer"></i>Dashboard</Link>
             </li>
             <li>
-                <Link to="/map">Map</Link>
+                <Link to="/map"><i className="fa fa-map"></i>Map</Link>
             </li>
             <li>
-                <Link to="/graphs">Graphs</Link>
+                <Link to="/graphs"><i className="fa fa-area-chart"></i>Graphs</Link>
             </li>
             <li>
-                <Link to="/gallery">Gallery</Link>
+                <Link to="/gallery"><i className="fa fa-camera"></i>Gallery</Link>
             </li>
             <li>
-                <Link to="/terminal">Terminal</Link>
+                <Link to="/terminal"><i className="fa fa-terminal"></i>Terminal</Link>
             </li>
             <li>
-                <Link to="/settings">Settings</Link>
+                <Link to="/settings"><i className="fa fa-cog"></i>Settings</Link>
             </li>
         </ul>
     </div>
