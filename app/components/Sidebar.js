@@ -3,8 +3,7 @@ import { Link } from 'react-router';
 
 const Sidebar = _ => (
     <div id="sidebar">
-        Sidebar!
-        <ul>
+        <ul className="navbar">
             <li>
                 <Link to="/">Dashboard</Link>
             </li>

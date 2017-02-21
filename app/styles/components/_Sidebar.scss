@@ -1,3 +1,24 @@
 #sidebar {
+    background-color: #007FFF;
+    display: flex;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: auto;
+    float: left;
+    padding-right: 10px;
+    .navbar {
+        list-style: none;
+        padding: 10px;
+        margin: 0;
+        li {
+            a {
+                text-decoration: none;
+            }
+        }
+    }
+}
 
+#detail {
+    display: flex;
 }
