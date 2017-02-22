@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 const toggleSidepanel = () => {
     document.getElementById('sidebar').classList.toggle('expanded');
     document.getElementById('detail').classList.toggle('expanded');
-}
+};
 
 const Sidebar = _ => (
     <div id="sidebar" className="expanded">
