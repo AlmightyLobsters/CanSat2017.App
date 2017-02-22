@@ -56,6 +56,10 @@
                 &:hover {
                     background: #CCC;
                 }
+
+                &.active {
+                    background-color: #C7C7C7;
+                }
             }
             &.bottom {
                 bottom: 0;
