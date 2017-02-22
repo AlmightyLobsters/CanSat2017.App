@@ -1,24 +1,77 @@
 #sidebar {
-    background-color: #007FFF;
-    display: flex;
+    background-color: #DDD;
+    position: fixed;
     left: 0;
     top: 0;
     height: 100vh;
-    width: auto;
-    float: left;
-    padding-right: 10px;
+    width: $sidebar-collapsed-width;
+    &.expanded {
+        width: $sidebar-expanded-width;
+        label {
+            display: initial !important;
+        }
+    }
+    transition: width $sidebar-transition-duration;
     .navbar {
         list-style: none;
-        padding: 10px;
+        padding: 0;
         margin: 0;
-        li {
-            a {
-                text-decoration: none;
+        section {
+            position: absolute;
+            width: 100%;
+            li {
+                cursor: pointer;
+                a {
+                    height: 48px;
+                    line-height: 48px;
+                    display: block;
+                    text-decoration: none;
+                    font-family: Novecento;
+                    font-weight: 600;
+                    color: black;
+                    position: relative;
+                    i.fa {
+                        height: 48px;
+                        width: 48px;
+                        padding: 0;
+                        margin: 0;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+
+                        &::before {
+                            position:absolute;
+                            left: 8px;
+                            top: 8px;
+                        }
+                    }
+                    label {
+                        cursor: pointer;
+                        display: none;
+                        margin-left: $sidebar-collapsed-width + 10px;
+                        transition: display $sidebar-transition-duration / 2;
+                    }
+                }
+
+                &:hover {
+                    background: #CCC;
+                }
+            }
+            &.bottom {
+                bottom: 0;
             }
         }
     }
 }
 
 #detail {
+    margin-left: $sidebar-expanded-width;
+    &.expanded {
+        margin-left: $sidebar-collapsed-width;
+    }
+    transition: margin-left $sidebar-transition-duration;
     display: flex;
+    background-color: white;
+    overflow-y: auto;
+    overflow-x: hidden;
 }

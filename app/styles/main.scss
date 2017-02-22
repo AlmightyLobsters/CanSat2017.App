@@ -1,7 +1,17 @@
 @import "../resources/fonts/font-awesome-4.7.0/scss/font-awesome";
+@import "./variables";
+
+@font-face {
+    font-family: "Novecento";
+    src: url('../resources/fonts/Novecentosanswide-Book.otf') format('opentype');
+}
+
+@font-face {
+    font-family: "Novecento Bold";
+    src: url('../resources/fonts/Novecentosanswide-Bold.otf') format('opentype');
+}
 
 body {
-    background: red;
     margin: 0;
 }
 
