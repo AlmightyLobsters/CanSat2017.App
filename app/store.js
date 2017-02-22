@@ -4,18 +4,14 @@ import { routerMiddleware, routerReducer as routing, push } from 'react-router-r
 import persistState from 'redux-localstorage';
 import thunk from 'redux-thunk';
 
-import user from './reducers/user';
-import userActions from './actions/user';
 
 const router = routerMiddleware(hashHistory);
 
 const actionCreators = {
-    ...userActions,
     push
 };
 
 const reducers = {
-    user,
     routing
 };
 
