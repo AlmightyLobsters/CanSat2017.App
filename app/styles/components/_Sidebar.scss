@@ -58,7 +58,20 @@
                 }
 
                 &.active {
-                    background-color: #C7C7C7;
+                    position: relative;
+                    a {
+                        color: $sidebar-active-color;
+                    }
+                    &::before {
+                        position: absolute;
+                        display: block;
+                        left: 0;
+                        top: 4px;
+                        height: 40px;
+                        width: 4px;
+                        background: $sidebar-active-color;
+                        content: "";
+                    }
                 }
             }
             &.bottom {
