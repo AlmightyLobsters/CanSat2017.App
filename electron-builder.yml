@@ -1,6 +1,6 @@
-appId: com.example.app
-copyright: Example co
-productName: MyApp
+appId: tech.lobsters.almighty.2017.app
+copyright: Almighty Lobsters
+productName: Project Marigold
 
 asar: true
 
