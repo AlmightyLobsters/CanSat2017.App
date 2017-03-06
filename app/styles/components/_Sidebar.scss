@@ -1,6 +1,6 @@
 #sidebar {
     background-color: #DDD;
-    opacity: 0.8;
+    opacity: 0.9;
     position: fixed;
     left: 0;
     top: 0;
@@ -32,8 +32,9 @@
                     color: black;
                     position: relative;
                     i.fa {
-                        height: 48px;
-                        width: 48px;
+                        font-size: 1.75em;
+                        height: 42px;
+                        width: 42px;
                         padding: 0;
                         margin: 0;
                         position: absolute;
@@ -80,6 +81,9 @@
                         content: "";
                     }
                 }
+            }
+            &.core {
+                top: 60px;
             }
             &.bottom {
                 bottom: 0;

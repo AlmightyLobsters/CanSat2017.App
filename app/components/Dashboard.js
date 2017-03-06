@@ -3,7 +3,12 @@ import { connect } from 'react-redux';
 
 const Dashboard = _ => (
     <div id="dashboard">
-        <h1>Dashboard</h1>
+        <section className="AltWrapper">
+            <div className="Altitude">
+                <h1 id="RelativeAltitude">467m</h1>
+                <h2 id="Estimate">landing in 37s</h2>
+            </div>
+        </section>
     </div>
 );
 

@@ -9,6 +9,13 @@
 @font-face {
     font-family: "Novecento Bold";
     src: url('../resources/fonts/Novecentosanswide-Bold.otf') format('opentype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Museo";
+    src: url('../resources/fonts/Museo300-Regular.ttf') format('truetype');
+    font-weight: 300;
 }
 
 body {

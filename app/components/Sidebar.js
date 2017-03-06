@@ -33,6 +33,8 @@ const Sidebar = ({location}) => (
                 <li>
                     <a style={{fontFamily: 'Novecento Bold'}} onClick={e => {toggleSidepanel();}}><i className="fa fa-bars fa-fw fa-2x"></i><label>Marigold</label></a>
                 </li>
+            </section>
+            <section className="core">
                 <li className={activeIf(location, '/')}>
                     <Link to="/" onClick={parallaxClick}><i className="fa fa-tachometer fa-fw fa-2x"></i><label>Dashboard</label></Link>
                 </li>
