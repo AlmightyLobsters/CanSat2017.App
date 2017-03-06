@@ -5,7 +5,7 @@ productName: Project Marigold
 asar: true
 
 directories:
-  buildResources: build-assets/
+  buildResources: app/resources/build-assets
   output: dist/
 
 files:
