@@ -2,16 +2,12 @@ import path from 'path';
 import url from 'url';
 import { app, crashReporter, BrowserWindow, Menu, screen } from 'electron';
 import wallpaper from 'wallpaper';
-import sizeOf from 'image-size';
+import fs from 'fs';
 import sharp from 'sharp';
+import fileUrl from 'file-url';
 
 const isDevelopment = (process.env.NODE_ENV === 'development');
-
-let scrWidth;
-let scrHeight;
-let wallpprScaledWidth;
-let wallpprScaledHeight;
-let wallpprYDelta;
+const localDir = isDevelopment ? __dirname : app.getPath('userData');
 
 let mainWindow = null;
 let forceQuit = false;
@@ -32,11 +28,11 @@ const installExtensions = async () => {
     }
 };
 
-wallpaper.get().then(wpPath => {
-    sharp(wpPath)
-    .blur(11)
-    .toFile(path.join(__dirname, `./cache/wallpaper${path.extname(wpPath)}`));
-});
+const blurBackground = async (radius, dir, name) => {
+    const wpPath = await wallpaper.get();
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    return sharp(wpPath).blur(1 + radius / 2).jpeg().toFile(path.join(dir, `${name}.jpeg`));
+};
 
 crashReporter.start({
     productName: 'AlmightyApp',
@@ -75,26 +71,26 @@ app.on('ready', async () => {
     }));
 
     mainWindow.on('move', () => {
+        const {x: boundX, y: boundY} = mainWindow.getBounds();
+        const {x: contentBoundX, y: contentBoundY} = mainWindow.getContentBounds();
         const [xPos, yPos] = mainWindow.getPosition();
-        mainWindow.webContents.executeJavaScript(`document.body.style.backgroundPosition = "${-xPos - 7}px ${-yPos - 7 - 40 - wallpprYDelta}px";`);
+        mainWindow.webContents.executeJavaScript(`document.body.style.backgroundPosition = "${-xPos - (contentBoundX - boundX)}px ${-yPos - (contentBoundY - boundY)}px";`);
     });
 
-    mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.on('did-finish-load', async () => {
         mainWindow.show();
         mainWindow.focus();
-        wallpaper.get().then(wpPath => {
-            const { width: imgWidth, height : imgHeight } = sizeOf(wpPath);
-            [scrWidth, scrHeight] = [screen.getPrimaryDisplay().size.width, screen.getPrimaryDisplay().size.height];
-            wallpprScaledWidth = scrWidth;
-            wallpprScaledHeight = wallpprScaledWidth * imgHeight / imgWidth;
-            wallpprYDelta = (wallpprScaledHeight - scrHeight) / 2;
-            const [xPos, yPos] = mainWindow.getPosition();
-            console.log(wallpprYDelta);
-            mainWindow.webContents.executeJavaScript(`
-                document.body.style.backgroundImage = "url(./cache/wallpaper${path.extname(wpPath)})";
-                document.body.style.backgroundSize = "${wallpprScaledWidth}px ${wallpprScaledHeight}px";
-                document.body.style.backgroundPosition = "${-xPos - 7}px ${-yPos - 7 - 40 - wallpprYDelta}px"; // TODO: Figure out the meaning of the magical number 29
-            `);
+        const {x: boundX, y: boundY} = mainWindow.getBounds();
+        const {x: contentBoundX, y: contentBoundY} = mainWindow.getContentBounds();
+        const [scrWidth, scrHeight] = [screen.getPrimaryDisplay().size.width, screen.getPrimaryDisplay().size.height];
+        const [xPos, yPos] = mainWindow.getPosition();
+        mainWindow.webContents.executeJavaScript(`
+            document.body.style.backgroundSize = "${scrWidth}px ${scrHeight}px";
+            document.body.style.backgroundPosition = "${-xPos - (contentBoundX - boundX)}px ${-yPos - (contentBoundY - boundY)}px";
+        `);
+        blurBackground(200, path.join(localDir, './cache'), 'wallpaper')
+        .then(info => {
+            mainWindow.webContents.executeJavaScript(`document.body.style.backgroundImage = 'url(${fileUrl(path.join(localDir, 'cache/wallpaper.jpeg'))})';`);
         });
 
     // Handle window logic properly on macOS:
