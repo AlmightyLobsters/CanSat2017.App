@@ -36,6 +36,8 @@ let settings = {...defaultSettings};
 
 export const SETTINGS_KEYS = () => Object.keys(settings);
 
+export const deleteSettings = (key) => delete settings[key];
+
 export const setSettings = (key, value) => {
     settings[key] = value;
 };
@@ -51,8 +53,13 @@ export const loadSettings = (filepath = null) => {
     if (filepath === null) filepath = getConfigValues('USER_SETTINGS');
     if (typeof filepath !== 'string') throw new TypeError('Settings file location must be a string');
     if (!isAbsolute(filepath)) filepath = resolve(getConfigValues('USER_DATA'), filepath);
-    const userSettings = require(resolve(filepath));
-    settings = {...settings, ...userSettings};
+    let userSettings = {};
+    try {
+        userSettings = require(resolve(filepath));
+    }
+    finally {
+        settings = {...settings, ...userSettings};
+    }
 };
 
 export const getSettingsValues = (...vars) => {
