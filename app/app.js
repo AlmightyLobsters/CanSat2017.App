@@ -4,10 +4,8 @@ import { Provider } from 'react-redux';
 import { Router, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import routes from './routes';
-import configureStore from './store';
+import store from './store';
 
-const initialState = {};
-const store = configureStore(initialState);
 const routerHistory = syncHistoryWithStore(hashHistory, store);
 
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
