@@ -12,7 +12,7 @@
   },
   "plugins": [ "react", "import" ],
   "rules": {
-    "indent": [ 2, 4 ],
+    "indent": [ 2, 4, { "SwitchCase": 1 } ],
     "quotes": [ 2, "single" ],
     "semi": [ 2, "always" ],
     "no-console": [ 0 ],
@@ -25,6 +25,7 @@
     "no-unused-vars": [2, { "args": "none" }],
     "no-unused-expressions" : [ 0 ], // until fixed https://github.com/babel/babel-eslint/issues/158
     "block-scoped-var": [ 0 ], // until fixed https://github.com/eslint/eslint/issues/2253
+    "eol-last": [ 2 ],
     "import/no-extraneous-dependencies": [ 2, {"devDependencies": true} ],
     "react/prop-types": [ 0 ],
     "react/prefer-stateless-function": [ 1 ],
