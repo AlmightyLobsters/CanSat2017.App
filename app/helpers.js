@@ -28,3 +28,28 @@ export const calculatePressVelocity = (pressure, pressures) => {
     const altFromPresBefore = (1 - ((pressures[pressures.length - 1] || 1000) / 1013.25) ** 0.190284) * 145366.45 * 0.3048;
     return altFromPresNow - altFromPresBefore;
 };
+
+export const bufferToPacket = buffer => {
+    if(typeof buffer !== 'object' || !Buffer.isBuffer(buffer)) throw new TypeError('Buffer has to be of type buffer');
+    return  `${buffer.readFloatLE(6)},`+ // time
+            `${buffer.readUInt16LE(0)},`+ // temp
+            `${buffer.readUInt16LE(2)},`+ // pres
+            `${buffer.readUInt16LE(4)},`+ // hmdt
+            `${buffer.readFloatLE(10)},`+ // lat
+            `${buffer.readUInt8(14) ? 'S' : 'N'},`+ // lato
+            `${buffer.readFloatLE(15)},`+ // lon
+            `${buffer.readUInt8(19) ? 'E' : 'W'},`+ // lono
+            `${buffer.readFloatLE(20)},`+ // alt
+            `${buffer.readInt16LE(50)},`+ // rssi
+            `${buffer.readFloatLE(24)},`+ // btlvl
+            `${buffer.readFloatLE(28)},`+ // prop
+            `${buffer.readInt16LE(32)},`+ // xacc
+            `${buffer.readInt16LE(34)},`+ // yacc
+            `${buffer.readInt16LE(36)},`+ // zacc
+            `${buffer.readInt16LE(38)},`+ // xrot
+            `${buffer.readInt16LE(40)},`+ // yrot
+            `${buffer.readInt16LE(42)},`+ // zrot
+            `${buffer.readInt16LE(44)},`+ // xmag
+            `${buffer.readInt16LE(46)},`+ // ymag
+            `${buffer.readInt16LE(48)}`; // zmag
+};
