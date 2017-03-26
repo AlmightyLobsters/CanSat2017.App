@@ -9,23 +9,6 @@ const toggleSidepanel = () => {
 
 const activeIf = (value, assumption) => value === assumption ? ' active' : '';
 
-const parallaxClick = e => {
-    console.log('PARALAX!!!');
-    const toAnimate = e.currentTarget.parentNode;
-    console.log(toAnimate.classList);
-    toAnimate.classList.remove('pressed');
-    toAnimate.classList.add('pressed');
-    const removeClass = e => {
-        toAnimate.classList.remove('pressed');
-        toAnimate.removeEventListener('animationend', removeClass);
-    };
-    toAnimate.addEventListener('animationend', removeClass);
-    const keyFrames = [...document.styleSheets[0].cssRules].filter(item => item.name === 'button-3d-click')[0];
-    [keyFrames.cssRules[1], keyFrames.cssRules[2]].forEach(rule => {
-        //console.log(rule);
-    });
-};
-
 const Sidebar = ({location}) => (
     <div id="sidebar" className="expanded">
         <ul className="navbar">
@@ -36,7 +19,7 @@ const Sidebar = ({location}) => (
             </section>
             <section className="core">
                 <li className={activeIf(location, '/')}>
-                    <Link to="/" onClick={parallaxClick}><i className="fa fa-tachometer fa-fw fa-2x"></i><label>Dashboard</label></Link>
+                    <Link to="/"><i className="fa fa-tachometer fa-fw fa-2x"></i><label>Dashboard</label></Link>
                 </li>
                 <li className={activeIf(location, '/map')}>
                     <Link to="/map"><i className="fa fa-map fa-fw fa-2x"></i><label>Map</label></Link>
