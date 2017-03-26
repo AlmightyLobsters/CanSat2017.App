@@ -5,9 +5,9 @@ export const changeConnectAction = connected => ({
     payload: connected
 });
 
-export const portAction = port => ({
-    type: types.ACTIVE_PORT,
-    payload: port
+export const portAction = list => ({
+    type: types.ADD_COM,
+    payload: list.map(e => e.comName)
 });
 
 export const changeAutoconnectAction = autoconnect => ({

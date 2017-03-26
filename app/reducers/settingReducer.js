@@ -9,7 +9,8 @@ const changeConnectReducer = (state = null, action) => {
 };
 
 const portReducer = (state = '', action) => {
-    if(action && action.type === types.ACTIVE_PORT) {
+    if(action && action.type === types.ADD_COM) {
+        console.log(action);
         return action.payload;
     }
     return state;
@@ -24,6 +25,6 @@ const changeAutoconnectReducer = (state = true, action) => {
 
 export default combineReducers({
     connected: changeConnectReducer,
-    port: portReducer,
+    coms: portReducer,
     autoconnect: changeAutoconnectReducer
 });
