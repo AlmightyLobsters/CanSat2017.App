@@ -1,21 +1,55 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addPacket } from '../helpers';
+import store from '../store';
 
-const ex_packet = '5,16.8,997,420,50,N,60,E,4,-55,3,2000,0.5,0,1,2,4,8,16,32,64';
+// TODO: finish
+const relAltitude = (calibrationAltitude, currentAltitude) => {
+    return currentAltitude - calibrationAltitude;
+};
 
-const Dashboard = _ => (
+// TODO: add compas direction calculation
+const direction = mag => {
+    return 0;
+};
+
+// TODO: add landing estimate colculation
+const estimate = (relAltitude, velocity) => {
+    return relAltitude / velocity;
+};
+
+const Dashboard = ({ connected, telemetry }) => (
     <div id="dashboard">
-        <button onClick={e => addPacket(ex_packet)}>Generate</button>
         <section className="AltWrapper">
             <div className="Altitude">
-                <h1 id="RelativeAltitude">467m</h1>
-                <h2 id="Estimate">landing in 37s</h2>
+                <h1 id="RelativeAltitude">{ relAltitude }</h1>
+                <h2 id="Estimate">landing in { estimate }</h2>
+            </div>
+        </section>
+
+        <section className="values">
+            <div id="left">
+                <ul>
+                    <li>{telemetry.gps.altts.slice(-1)}</li>
+                    <li>{telemetry.vel.press.slice(-1)}</li>
+                    <li>{telemetry.stats.batlvls.slice(-1)}</li>
+                    <li>{telemetry.acc.xs.slice(-1)}, {telemetry.acc.ys.slice(-1)}, {telemetry.acc.zs.slice(-1)}</li>
+                    <li>{direction}</li>
+                </ul>
+            </div>
+            <div id="right">
+                <ul>
+                    <li>{telemetry.gps.latts.slice(-1)}, {telemetry.gps.longs.slice(-1)}</li>
+                    <li>{telemetry.stats.rssis.slice(-1)}</li>
+                    <li>{telemetry.primary.temps.slice(-1)}</li>
+                    <li>{telemetry.primary.press.slice(-1)}</li>
+                    <li>{telemetry.primary.hmdts.slice(-1)}</li>
+                </ul>
             </div>
         </section>
     </div>
 );
 
 export default connect(store => ({
-
+    connected: store.connected,
+    telemetry: store.telemetry
 }))(Dashboard);
