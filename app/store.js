@@ -25,8 +25,7 @@ const initialState = {
         },
         stats: {
             rssis: [],
-            batlvls: [],
-            proprots: []
+            batlvls: []
         },
         acc: {
             xs: [],
@@ -52,7 +51,7 @@ const initialState = {
     settings: {
         autoconnect: true,
         connected: null,
-        port: ''
+        coms: []
     }
 };
 
