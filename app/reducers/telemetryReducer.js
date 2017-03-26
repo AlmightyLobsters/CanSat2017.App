@@ -51,16 +51,14 @@ const gpsReducer = (state = {latts: [], latts_o: [], longs: [], longs_o: [], alt
     return state;
 };
 
-const statsReducer = (state = {rssis: [], batlvls: [], proprots: []}, action) => {
+const statsReducer = (state = {rssis: [], batlvls: []}, action) => {
     if (action && action.type === types.ADD_STATS) {
-        const { rssi, batteryLevel, propellerRotations } = action.payload;
+        const { rssi, batteryLevel } = action.payload;
         requireNumber(rssi, 'RSSI');
         requireNumber(batteryLevel);
-        requireNumber(propellerRotations);
         return {
             rssis: state.rssis.concat([Number(rssi)]),
             batlvls: state.batlvls.concat([Number(batteryLevel)]),
-            proprots: state.proprots.concat([Number(propellerRotations)])
         };
     }
     return state;

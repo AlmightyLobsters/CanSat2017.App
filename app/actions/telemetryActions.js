@@ -34,12 +34,11 @@ export const addGpsAction = (latitudeVal, latitudeOr, longitudeVal, longitudeOr,
     }
 });
 
-export const addStatsAction = (rssi, batteryLevel, propellerRotations) => ({
+export const addStatsAction = (rssi, batteryLevel) => ({
     type: types.ADD_STATS,
     payload: {
         rssi,
-        batteryLevel,
-        propellerRotations
+        batteryLevel
     }
 });
 
