@@ -6,7 +6,7 @@ import { changeConnectAction, portAction } from './actions/settingActions';
 export const addPacket = packet => {
     if (typeof packet !== 'string') throw new TypeError('Packet must be of type string');
     const [TIME,TEMPERATURE,PRESSURE,HUMIDITY,LATITUDE,LATITUDE_ORIENTATION,LONGITUDE,LONGITUDE_ORIENTATION,ALTITUDE,RSSI,BATTERY_LEVEL,VELOCITY,X_ACCELERATION,Y_ACCELERATION,Z_ACCELERATION,X_ROTATION,Y_ROTATION,Z_ROTATION,X_MAGNETIC_FIELD,Y_MAGNETIC_FIELD,Z_MAGNETIC_FIELD] = packet.split(',');
-    store.dispatch(actions.addVelAction(calculateAccVelocity(X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION, X_ROTATION, Y_ROTATION, Z_ROTATION, store.getState().telemetry.vel.accs), calculateAltVelocity(ALTITUDE, store.getState().telemetry.gps.altts), VELOCITY));
+    /* telemetry */
     store.dispatch(actions.addTimeAction(TIME));
     store.dispatch(actions.addPrimAction(TEMPERATURE, PRESSURE, HUMIDITY));
     store.dispatch(actions.addGpsAction(LATITUDE, LATITUDE_ORIENTATION, LONGITUDE, LONGITUDE_ORIENTATION, ALTITUDE));
@@ -14,12 +14,72 @@ export const addPacket = packet => {
     store.dispatch(actions.addAccAction(X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION));
     store.dispatch(actions.addRotAction(X_ROTATION, Y_ROTATION, Z_ROTATION));
     store.dispatch(actions.addMagAction(X_MAGNETIC_FIELD, Y_MAGNETIC_FIELD, Z_MAGNETIC_FIELD));
+    store.dispatch(actions.addVelAction(
+        calculateAccVelocity(X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION, X_ROTATION, Y_ROTATION, Z_ROTATION, store.getState().telemetry.vel.accs),
+        calculateAltVelocity(ALTITUDE, store.getState().telemetry.gps.altts),
+        VELOCITY
+    ));
+
+    /*derivations */
+    store.dispatch(actions.addRelativeAltAction(ALTITUDE));
+    store.dispatch(actions.addFramedAccAction(frameAcceleration([X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION], [X_ROTATION, Y_ROTATION, Z_ROTATION], [X_MAGNETIC_FIELD, Y_MAGNETIC_FIELD, Z_MAGNETIC_FIELD])));
+    store.dispatch(actions.addGpsPressAction(pressureAltitude(ALTITUDE)));
 };
 
-export const frameAcceleration = (acceleration, rotation) => {
-    if(acceleration.length !== rotation.length) throw new Error('The dimension of acceleration does not correspond to the one of rotation');
-    //TODO: Max's magic
+
+/* frame it nice */
+export const frameAcceleration = (acceleration, rotation, magfield) => {
+    if (acceleration.length !== rotation.length) throw new Error('The dimension of acceleration does not correspond to the one of rotation');
+    // probe's frame of reference: (X, Y, Z); earth's frame: (V, H1, H2)
+    let V = acceleration;
+    let H1 = magfield;
+    let H2 = crossProduct(V, H1);
+    H1 = crossProduct(V, H2);
+
+    normalize(H1);
+    normalize(H2);
+
+    return matMult([V, H1, H2], rotation);
 };
+
+const matMult = (a, b) => {
+    var aNumRows = a.length, aNumCols = a[0].length,
+        bNumRows = b.length, bNumCols = b[0].length,
+        m = new Array(aNumRows);  // initialize array of rows
+    for (var r = 0; r < aNumRows; ++r) {
+        m[r] = new Array(bNumCols); // initialize the current row
+        for (var c = 0; c < bNumCols; ++c) {
+            m[r][c] = 0;             // initialize the current cell
+            for (var i = 0; i < aNumCols; ++i) {
+                m[r][c] += a[r][i] * b[i][c];
+            }
+        }
+    }
+    return m;
+};
+
+
+const normalize = v => v.map(e => e / vectorLength(v));
+
+const vectorLength = v => Math.sqrt(v.reduce((acc, val) => acc + (val ** 2) , 0));
+
+const randomVector = d => {
+    //TODO: add perpendicularity check
+    let arr = [];
+    for (let i = 0; i < d; d++) arr[i] = Math.random();
+    return arr;
+}
+
+const flatten = arr => [].concat.apply([], arr);
+
+const crossProduct = (...sets) =>
+    sets.reduce((acc, set) =>
+        flatten(acc.map(x => set.map(y => [...x, y]))),
+        [[]]);
+
+
+/* Velocity calculation */
+export const getVelocity = (distance, time) => distance / time;
 
 export const calculateAccVelocity = (accY, prevVel) => {
     //TODO: Part two of Max's magic
@@ -38,6 +98,21 @@ export const calculateAltVelocity = (altitude, altitudes) => altitude - (altitud
 //     return altFromPresNow - altFromPresBefore;
 // };
 
+
+/* Barometric constants and functions */
+const P0 = 1013.25;
+const feet = 0.3084;
+const T0 = 288.15;
+const g = 9.80665;
+const M = 0.0289644;
+const R0 = 8.31447;
+
+export const altitudePressure = pressure => (1 - (pressure / P0) ** 0.190284) * 145366.45 * feet;
+
+export const pressureAltitude = altitude => P0 * Math.exp(- g * M * altitude / R0 * T0);
+
+
+/* Packet management */
 export const bufferToPacket = buffer => {
     if(typeof buffer !== 'object' || !Buffer.isBuffer(buffer)) throw new TypeError('Buffer has to be of type buffer');
     return  `${buffer.readFloatLE(8)},`+ // time
@@ -63,7 +138,12 @@ export const bufferToPacket = buffer => {
             `${buffer.readInt16LE(48)}`; // zmag
 };
 
-const serialConnect = (ports) => {
+export const requireNumber = (value, name) => { if ((!value && value !== 0) || isNaN(value)) throw new TypeError(`${name} (${value}) must be convertable to a number`); };
+export const requireBelongs = (value = '', str = '', name) => { if (!value || str.toUpperCase().indexOf(value.toUpperCase()) === -1) throw new TypeError(`${name} (${value}) must belong to ` + str.split('').join('|')); };
+
+
+/* Serial connection */
+const serialConnect = ports => {
     if (ports.length === 1) {
         let port = new SerialPort(ports[0].comName, {
             baudrate: 9600,
@@ -104,4 +184,3 @@ export const serialCommunicate = force => {
         store.dispatch(portAction(ports));
     });
 };
-
