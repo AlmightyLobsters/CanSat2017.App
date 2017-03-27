@@ -52,6 +52,27 @@ const initialState = {
         autoconnect: true,
         connected: null,
         coms: []
+    },
+    calculatedValues: {
+        relAlts: [],
+        framedAccs: {
+            xs: [],
+            ys: [],
+            zs: []
+        },
+        gpsPress: []
+    },
+    calibration: {
+        time: null,
+        temp: null,
+        pres: null,
+        alt: null,
+        hmdt: null,
+        gps: [],
+        acc: [],
+        mag: [],
+        rot: [],
+        batlvl: null
     }
 };
 
