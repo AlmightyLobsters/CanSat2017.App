@@ -1,7 +1,7 @@
 import * as actions from './actions/telemetryActions';
 import store from './store';
 import SerialPort from 'serialport';
-import { changeConnectAction } from './actions/settingActions';
+import { changeConnectAction, portAction } from './actions/settingActions';
 
 export const addPacket = packet => {
     if (typeof packet !== 'string') throw new TypeError('Packet must be of type string');
@@ -63,12 +63,45 @@ export const bufferToPacket = buffer => {
             `${buffer.readInt16LE(48)}`; // zmag
 };
 
-export const serialConnect = (com, baudrate) => {
-    let port = new SerialPort(com, {
-        baudrate,
-        parser: SerialPort.parsers.raw
-    });
-    if (port) store.dispatch(changeConnectAction(true));
-    else throw new Error('Serial connection was not established');
-    return port;
+const serialConnect = (ports) => {
+    if (ports.length === 1) {
+        let port = new SerialPort(ports[0].comName, {
+            baudrate: 9600,
+            parser: SerialPort.parsers.raw
+        });
+        if (port) store.dispatch(changeConnectAction(true));
+        else throw new Error('Serial connection was not established');
+        return port;
+    }
+    else {
+        reconnect();
+    }
 };
+
+const reconnect = () => {
+    alert('Please connect exactly one device and hit enter');
+    serialCommunicate(true);
+};
+
+export const serialCommunicate = force => {
+    SerialPort.list((err, ports) => {
+        if (err) throw err;
+        if (store.getState().settings.autoconnect || force) {
+            serialConnect(ports).on('data', (data) => {
+                addPacket(bufferToPacket(data));
+            }).on('error', err => {
+                store.dispatch(changeConnectAction(false));
+                throw err;
+            }).on('disconnect', () => {
+                store.dispatch(changeConnectAction(false));
+                reconnect();
+            });
+        }
+        else {
+            store.dispatch(changeConnectAction(false));
+            reconnect();
+        }
+        store.dispatch(portAction(ports));
+    });
+};
+
