@@ -1,11 +1,9 @@
 import { combineReducers } from 'redux';
 import * as types from '../actions/telemetryActionTypes';
-
-const requireNumber = (value, name) => { if ((!value && value !== 0) || isNaN(value)) throw new TypeError(`${name} (${value}) must be convertable to a number`); };
-const requireBelongs = (value = '', str='', name) => { if (!value || str.toUpperCase().indexOf(value.toUpperCase()) === -1) throw new TypeError(`${name} (${value}) must belong to ` + str.split('').join('|')); };
+import { requireBelongs, requireNumber } from '../helpers';
 
 const timeReducer = (state = [], action) => {
-    if(action && action.type === types.ADD_TIME) {
+    if (action && action.type === types.ADD_TIME) {
         const time = action.payload;
         requireNumber(time, 'Time');
         return state.concat([Number(time)]);
@@ -14,7 +12,7 @@ const timeReducer = (state = [], action) => {
 };
 
 const primReducer = (state = {temps: [], press: [], hmdts: []}, action) => {
-    if(action && action.type === types.ADD_PRIM) {
+    if (action && action.type === types.ADD_PRIM) {
         const { temperature, pressure, humidity } = action.payload;
         requireNumber(temperature, 'Temperature');
         requireNumber(pressure, 'Pressure');
@@ -65,7 +63,7 @@ const statsReducer = (state = {rssis: [], batlvls: []}, action) => {
 };
 
 const accReducer = (state = {xs: [], ys: [], zs: []}, action) => {
-    if(action && action.type === types.ADD_ACC) {
+    if (action && action.type === types.ADD_ACC) {
         const { x, y, z } = action.payload;
         requireNumber(x, 'X Acceleration');
         requireNumber(y, 'Y Acceleration');
