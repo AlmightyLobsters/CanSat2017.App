@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Program",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd",
+            "program": "${workspaceRoot}/app/main.js",
+            "outFiles": [
+                "${workspaceRoot}/build/main.js"
+            ],
+            "sourceMaps": true
+        }
+    ]
+}
