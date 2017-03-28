@@ -31,12 +31,22 @@ const gpressReducer = (state = [], action) => {
         const pres = action.payload;
         requireNumber(pres, 'GPS Pressure');
         return state.concat([Number(pres)]);
-    };
+    }
+    return state;
+};
+
+const wvelReducer = (state = [], action) => {
+    if (action && action.type === types.ADD_WVEL) {
+        const vel = action.payload;
+        requireNumber(vel, 'Wind Velocity');
+        return state.concat([Number(vel)]);
+    }
     return state;
 };
 
 export default combineReducers({
     relAlts: raltReducer,
     framedAccs: faccReducer,
-    gpsPress: gpressReducer
+    gpsPress: gpressReducer,
+    wvel: wvelReducer
 });

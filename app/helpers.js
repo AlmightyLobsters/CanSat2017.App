@@ -5,12 +5,12 @@ import { changeConnectAction, portAction } from './actions/settingActions';
 
 export const addPacket = packet => {
     if (typeof packet !== 'string') throw new TypeError('Packet must be of type string');
-    const [TIME,TEMPERATURE,PRESSURE,HUMIDITY,LATITUDE,LATITUDE_ORIENTATION,LONGITUDE,LONGITUDE_ORIENTATION,ALTITUDE,RSSI,BATTERY_LEVEL,VELOCITY,X_ACCELERATION,Y_ACCELERATION,Z_ACCELERATION,X_ROTATION,Y_ROTATION,Z_ROTATION,X_MAGNETIC_FIELD,Y_MAGNETIC_FIELD,Z_MAGNETIC_FIELD] = packet.split(',');
+    const [TIME,TEMPERATURE,PRESSURE,HUMIDITY,LATITUDE,LATITUDE_ORIENTATION,LONGITUDE,LONGITUDE_ORIENTATION,ALTITUDE,RSSI,BATTERY_VOLTAGE,VELOCITY,X_ACCELERATION,Y_ACCELERATION,Z_ACCELERATION,X_ROTATION,Y_ROTATION,Z_ROTATION,X_MAGNETIC_FIELD,Y_MAGNETIC_FIELD,Z_MAGNETIC_FIELD] = packet.split(',');
     /* telemetry */
     store.dispatch(actions.addTimeAction(TIME));
     store.dispatch(actions.addPrimAction(TEMPERATURE, PRESSURE, HUMIDITY));
     store.dispatch(actions.addGpsAction(LATITUDE, LATITUDE_ORIENTATION, LONGITUDE, LONGITUDE_ORIENTATION, ALTITUDE));
-    store.dispatch(actions.addStatsAction(RSSI, BATTERY_LEVEL));
+    store.dispatch(actions.addStatsAction(RSSI, getBatteryLvl(BATTERY_VOLTAGE)));
     store.dispatch(actions.addAccAction(X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION));
     store.dispatch(actions.addRotAction(X_ROTATION, Y_ROTATION, Z_ROTATION));
     store.dispatch(actions.addMagAction(X_MAGNETIC_FIELD, Y_MAGNETIC_FIELD, Z_MAGNETIC_FIELD));
@@ -21,9 +21,29 @@ export const addPacket = packet => {
     ));
 
     /*derivations */
-    store.dispatch(actions.addRelativeAltAction(ALTITUDE));
-    store.dispatch(actions.addFramedAccAction(frameAcceleration([X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION], [X_ROTATION, Y_ROTATION, Z_ROTATION], [X_MAGNETIC_FIELD, Y_MAGNETIC_FIELD, Z_MAGNETIC_FIELD])));
+    const relAlt = altitudePressure(PRESSURE);
+    const framedAcc = frameAcceleration([X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION], [X_ROTATION, Y_ROTATION, Z_ROTATION], [X_MAGNETIC_FIELD, Y_MAGNETIC_FIELD, Z_MAGNETIC_FIELD]);
+    store.dispatch(actions.addRelativeAltAction(relAlt));
+    store.dispatch(actions.addFramedAccAction(framedAcc));
     store.dispatch(actions.addGpsPressAction(pressureAltitude(ALTITUDE)));
+    store.dispatch(actions.updateEst(estimateLanding(relAlt, VELOCITY)));
+    store.dispatch(actions.addWindVel(framedAcc[0], framedAcc[1]));
+};
+
+export const calibrate = packet => {
+    if (typeof packet !== 'string') throw new TypeError('Packet must be of type string');
+    const [TIME, TEMPERATURE, PRESSURE, HUMIDITY, LATITUDE, LATITUDE_ORIENTATION, LONGITUDE, LONGITUDE_ORIENTATION, ALTITUDE, RSSI, BATTERY_VOLTAGE, VELOCITY, X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION, X_ROTATION, Y_ROTATION, Z_ROTATION, X_MAGNETIC_FIELD, Y_MAGNETIC_FIELD, Z_MAGNETIC_FIELD] = packet.split(',');
+
+    store.dispatch(actions.setTimeAction(TIME));
+    store.dispatch(actions.setTempAction(TEMPERATURE));
+    store.dispatch(actions.setPresAction(PRESSURE));
+    store.dispatch(actions.setAltAction(ALTITUDE));
+    store.dispatch(actions.setHmdtAction(HUMIDITY));
+    store.dispatch(actions.setGPSAction([LATITUDE, LONGITUDE, ALTITUDE]));
+    store.dispatch(actions.setAccAction([X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION]));
+    store.dispatch(actions.setRotAction([X_ROTATION, Y_ROTATION, Z_ROTATION]));
+    store.dispatch(actions.setMagaction([X_MAGNETIC_FIELD, Y_MAGNETIC_FIELD, Z_MAGNETIC_FIELD]));
+    store.dispatch(actions.setBatlvlAction(getBatteryLvl(BATTERY_VOLTAGE)));
 };
 
 
@@ -42,6 +62,9 @@ export const frameAcceleration = (acceleration, rotation, magfield) => {
     return matMult([V, H1, H2], rotation);
 };
 
+
+/* obscure math */
+
 const matMult = (a, b) => {
     var aNumRows = a.length, aNumCols = a[0].length,
         bNumRows = b.length, bNumCols = b[0].length,
@@ -58,6 +81,13 @@ const matMult = (a, b) => {
     return m;
 };
 
+const addVectors = (v1, v2) => {
+    let v3 = [];
+    for (let i = 0; i < v1.length; i++) {
+        v3.push(v1[i] + v2[i]);
+    }
+    return v3;
+};
 
 const normalize = v => v.map(e => e / vectorLength(v));
 
@@ -110,6 +140,14 @@ const R0 = 8.31447;
 export const altitudePressure = pressure => (1 - (pressure / P0) ** 0.190284) * 145366.45 * feet;
 
 export const pressureAltitude = altitude => P0 * Math.exp(- g * M * altitude / R0 * T0);
+
+
+/* Obscure functions */
+export const estimateLanding = (altitude, velocity) => altitude / velocity;
+
+export const getBatteryLvl = (voltage) => voltage;
+
+export const getWindVelocity = (x, y) => vectorLength(addVectors(x, y));
 
 
 /* Packet management */

@@ -19,3 +19,13 @@ export const addGpsPressAction = pressure => ({
     type: types.ADD_GPRS,
     payload: pressure
 });
+
+export const updateEst = time => ({
+    type: types.UPDATE_EST,
+    payload: time
+});
+
+export const addWindVel = velocity => ({
+    type: types.ADD_WVEL,
+    payload: velocity
+});
