@@ -63,16 +63,16 @@ const initialState = {
         gpsPress: []
     },
     calibration: {
-        time: null,
-        temp: null,
-        pres: null,
-        alt: null,
-        hmdt: null,
+        time: 0,
+        temp: 0,
+        pres: 0,
+        alt: 0,
+        hmdt: 0,
         gps: [],
         acc: [],
         mag: [],
         rot: [],
-        batlvl: null
+        batlvl: 0
     }
 };
 

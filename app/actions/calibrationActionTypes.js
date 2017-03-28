@@ -1,0 +1,10 @@
+export const SET_TIME = 'SET_TIME';
+export const SET_TEMP = 'SET_TEMP';
+export const SET_PRES = 'SET_PRES';
+export const SET_ALT = 'SET_ALT';
+export const SET_HMDT = 'SET_HMDT';
+export const SET_GPS = 'SET_GPS';
+export const SET_ACC = 'SET_ACC';
+export const SET_MAG = 'SET_MAG';
+export const SET_ROT = 'SET_ROT';
+export const SET_BATLVL = 'SET_BATLVL';
