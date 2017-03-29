@@ -154,7 +154,7 @@ export const getWindVelocity = (x, y) => vectorLength(addVectors(x, y));
 export const bufferToPacket = buffer => {
     if(typeof buffer !== 'object' || !Buffer.isBuffer(buffer)) throw new TypeError('Buffer has to be of type buffer');
     return  `${buffer.readFloatLE(8)},`+ // time
-            `${buffer.readUInt16LE(2)},`+ // temp
+            `${buffer.readInt16LE(2)},`+ // temp
             `${buffer.readUInt16LE(4)},`+ // pres
             `${buffer.readUInt16LE(6)},`+ // hmdt
             `${buffer.readFloatLE(12)},`+ // lat
