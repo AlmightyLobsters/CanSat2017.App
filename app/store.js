@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import { hashHistory } from 'react-router';
 import { routerMiddleware, routerReducer as routing, push } from 'react-router-redux';
-// import persistState from 'redux-localstorage';
+import persistState from 'redux-localstorage';
 import thunk from 'redux-thunk';
 
 import telemetry from './reducers/telemetryReducer';
@@ -100,7 +100,7 @@ const composeEnhancers = (() => {
 })();
 
 function configureStore(initialState) {
-    const enhancer = composeEnhancers(applyMiddleware(...middlewares)); // persistState()
+    const enhancer = composeEnhancers(applyMiddleware(...middlewares), persistState());
     const rootReducer = combineReducers(reducers);
 
     return createStore(rootReducer, initialState, enhancer);

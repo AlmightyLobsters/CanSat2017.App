@@ -42,6 +42,7 @@
     "react-router": "^3.0.2",
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
+    "redux-csv": "^0.1.9",
     "redux-localstorage": "^0.4.1",
     "redux-thunk": "^2.2.0",
     "serialport": "^4.0.7",
