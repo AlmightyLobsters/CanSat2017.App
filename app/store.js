@@ -6,6 +6,8 @@ import thunk from 'redux-thunk';
 
 import telemetry from './reducers/telemetryReducer';
 import settings from './reducers/settingReducer';
+import calculatedValues from './reducers/calculatedReducer';
+import calibration from './reducers/calibrationReducer';
 
 
 const initialState = {
@@ -60,7 +62,9 @@ const initialState = {
             ys: [],
             zs: []
         },
-        gpsPress: []
+        gpsPress: [],
+        est: 0,
+        wvel: []
     },
     calibration: {
         time: 0,
@@ -86,7 +90,9 @@ const actionCreators = {
 const reducers = {
     routing,
     telemetry,
-    settings
+    settings,
+    calculatedValues,
+    calibration
 };
 
 const middlewares = [ thunk, router ];
