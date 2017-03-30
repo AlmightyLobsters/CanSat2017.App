@@ -27,4 +27,15 @@
         margin-top: -3em;
         font-size: 4vh;
     }
+
+    .values {
+        display: flex;
+        flex-direction: row;
+
+        div{
+            width: 48%;
+            min-height: 10em;
+            background: rgba(256, 256, 256, .9);
+        }
+    }
 }

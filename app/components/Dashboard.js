@@ -1,49 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import store from '../store';
+import { getSide } from '../helpers';
 
-// TODO: finish
-const relAltitude = (calibrationAltitude, currentAltitude) => {
-    return currentAltitude - calibrationAltitude;
-};
-
-// TODO: add compas direction calculation
-const direction = mag => {
-    return 0;
-};
-
-// TODO: add landing estimate colculation
-const estimate = (relAltitude, velocity) => {
-    return relAltitude / velocity;
-};
-
-const Dashboard = ({ connected, telemetry }) => (
+const Dashboard = ({ connected, telemetry, derived }) => (
     <div id="dashboard">
         <section className="AltWrapper">
             <div className="Altitude">
-                <h1 id="RelativeAltitude">{ relAltitude }</h1>
-                <h2 id="Estimate">landing in { estimate }</h2>
+                <h1 id="RelativeAltitude">{ derived.relAlts.slice(-1) }</h1>
+                <h2 id="Estimate">landing in { derived.est }</h2>
             </div>
         </section>
 
         <section className="values">
             <div id="left">
-                <ul>
-                    <li>{telemetry.gps.altts.slice(-1)}</li>
-                    <li>{telemetry.vel.press.slice(-1)}</li>
-                    <li>{telemetry.stats.batlvls.slice(-1)}</li>
-                    <li>{telemetry.acc.xs.slice(-1)}, {telemetry.acc.ys.slice(-1)}, {telemetry.acc.zs.slice(-1)}</li>
-                    <li>{direction}</li>
-                </ul>
+                <p>The probe <b>is</b> {telemetry.gps.altts.slice(-1)}m a.s.l.,
+                <b>falling</b> at a rate of {telemetry.vel.press.slice(-1)}m/s,
+                <b>Heading</b> {derived.wvel.slice(-1)}m/s
+                in the general <b>direction</b> of {getSide(derived.compass.slice(-1))} ({derived.compass.slice(-1)}).
+                Currently <b>located</b> at {telemetry.gps.latts.slice(-1)}{telemetry.gps.latts_o.slice(-1)}, {telemetry.gps.longs.slice(-1)}{telemetry.gps.longs_o.slice(-1)}</p>
             </div>
             <div id="right">
-                <ul>
-                    <li>{telemetry.gps.latts.slice(-1)}, {telemetry.gps.longs.slice(-1)}</li>
-                    <li>{telemetry.stats.rssis.slice(-1)}</li>
-                    <li>{telemetry.primary.temps.slice(-1)}</li>
-                    <li>{telemetry.primary.press.slice(-1)}</li>
-                    <li>{telemetry.primary.hmdts.slice(-1)}</li>
-                </ul>
+                <p>The strength of <b>signal</b> is {telemetry.stats.rssis.slice(-1)}db.
+                <b>Temperature</b> is {telemetry.primary.temps.slice(-1)}°C,
+                <b>Atmospheric</b> pressure {telemetry.primary.press.slice(-1)}mbar
+                and <b>Humidity</b> {telemetry.primary.hmdts.slice(-1)}%.</p>
             </div>
         </section>
     </div>
@@ -51,5 +31,6 @@ const Dashboard = ({ connected, telemetry }) => (
 
 export default connect(store => ({
     connected: store.connected,
-    telemetry: store.telemetry
+    telemetry: store.telemetry,
+    derived: store.calculatedValues
 }))(Dashboard);
