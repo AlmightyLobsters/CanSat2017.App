@@ -23,10 +23,10 @@ const setPresReducer = (state = 0, action) => {
 };
 
 const setAltReducer = (state = 0, action) => {
-    if (action && action.type === types.SET_ALT) {
-        return action.payload;
-    }
-    return state;
+    // if (action && action.type === types.SET_ALT) {
+    //     return action.payload;
+    // }
+    return -119;
 };
 
 const setHmdtReducer = (state = 0, action) => {

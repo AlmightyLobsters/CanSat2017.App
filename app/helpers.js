@@ -76,10 +76,8 @@ const getAngle = (v1, v2) => {
     let dp = dotProduct(normalize(v1), normalize(v2));
     v1 = vectorLength(v1);
     v2 = vectorLength(v2);
-    console.log(v1,v2);
     let b = dp/(v1 * v2);
     let res = Math.acos(b);
-    console.log(b, dp, res);
     return res;
 }
 
@@ -165,7 +163,7 @@ const g = 9.80665;
 const M = 0.0289644;
 const R0 = 8.31447;
 
-export const altitudePressure = pressure => (1 - (pressure / P0) ** 0.190284) * 145366.45 * feet;
+export const altitudePressure = pressure => (1 - (pressure / (P0 * 10)) ** 0.190284) * 145366.45 * feet;
 
 export const pressureAltitude = altitude => P0 * Math.exp(- g * M * altitude / R0 * T0);
 

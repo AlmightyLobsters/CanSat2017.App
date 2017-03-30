@@ -7,7 +7,7 @@ const raltReducer = (state = [], action) => {
         const alt = action.payload;
         requireNumber(alt, 'Relative Altitude');
         return state.concat([Number(alt)]);
-    };
+    }
     return state;
 };
 

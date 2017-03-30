@@ -107,7 +107,7 @@ const composeEnhancers = (() => {
 })();
 
 function configureStore(initialState) {
-    const enhancer = composeEnhancers(applyMiddleware(...middlewares), persistState());
+    const enhancer = composeEnhancers(applyMiddleware(...middlewares), /*persistState()*/);
     const rootReducer = combineReducers(reducers);
 
     return createStore(rootReducer, initialState, enhancer);
