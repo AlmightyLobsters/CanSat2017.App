@@ -44,9 +44,26 @@ const wvelReducer = (state = [], action) => {
     return state;
 };
 
+const estReducer = (state = 0, action) => {
+    if (action && action.type === types.UPDATE_EST) {
+        return action.payload;
+    }
+    return state;
+};
+
+const compReducer = (state = [], action) => {
+    if (action && action.type === types.ADD_COMP) {
+        const dir = action.payload;
+        requireNumber(dir, 'Direction');
+        return state.concat([Number(dir)]);
+    }
+    return state;
+};
+
 export default combineReducers({
     relAlts: raltReducer,
     framedAccs: faccReducer,
     gpsPress: gpressReducer,
-    wvel: wvelReducer
+    wvel: wvelReducer,
+    est: estReducer
 });

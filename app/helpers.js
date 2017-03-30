@@ -29,6 +29,7 @@ export const addPacket = packet => {
     store.dispatch(actions.addGpsPressAction(pressureAltitude(ALTITUDE)));
     store.dispatch(actions.updateEst(estimateLanding(relAlt, VELOCITY)));
     store.dispatch(actions.addWindVel(framedAcc[0], framedAcc[1]));
+    store.dispatch(actions.addCompassAction(getAngle([X_MAGNETIC_FIELD,Y_MAGNETIC_FIELD,Z_MAGNETIC_FIELD], [1,0,0])));
 };
 
 export const calibrate = packet => {
@@ -45,12 +46,6 @@ export const calibrate = packet => {
     store.dispatch(actions.setRotAction([X_ROTATION, Y_ROTATION, Z_ROTATION]));
     store.dispatch(actions.setMagaction([X_MAGNETIC_FIELD, Y_MAGNETIC_FIELD, Z_MAGNETIC_FIELD]));
     store.dispatch(actions.setBatlvlAction(getBatteryLvl(BATTERY_VOLTAGE)));
-};
-
-
-/* Magnetometer */
-const getDirection = (magfield, calMagfield) => {
-    let angle = getAngle(magfield, calMagfield);
 };
 
 

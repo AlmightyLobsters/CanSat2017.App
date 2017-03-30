@@ -29,3 +29,8 @@ export const addWindVel = velocity => ({
     type: types.ADD_WVEL,
     payload: velocity
 });
+
+export const addCompassAction = direction => ({
+    type: types.ADD_COMP,
+    payload: direction
+});
