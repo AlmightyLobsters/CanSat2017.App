@@ -126,6 +126,7 @@ const packetReducer = (state = [], action) => {
     if (action && action.type === types.ADD_PACKET) {
         return state.concat([action.payload]);
     }
+    return state;
 };
 
 export default combineReducers({

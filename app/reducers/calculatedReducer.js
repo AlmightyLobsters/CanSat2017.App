@@ -65,5 +65,6 @@ export default combineReducers({
     framedAccs: faccReducer,
     gpsPress: gpressReducer,
     wvel: wvelReducer,
-    est: estReducer
+    est: estReducer,
+    compass: compReducer
 });
