@@ -1,4 +1,8 @@
-import * as actions from './actions/telemetryActions';
+import * as telemetryActions from './actions/telemetryActions';
+import * as settingsActions from './actions/settingActions';
+import * as calculatedActions from './actions/calculatedActions';
+import * as calibrationsActions from './actions/calibrationActions';
+const actions = {...telemetryActions, ...settingsActions, ...calculatedActions, ...calibrationsActions};
 import store from './store';
 import SerialPort from 'serialport';
 import { changeConnectAction, portAction } from './actions/settingActions';
@@ -19,7 +23,7 @@ export const addPacket = packet => {
         calculateAltVelocity(ALTITUDE, store.getState().telemetry.gps.altts.slice(-1), TIME, store.getState().telemetry.times.slice(-1)),
         VELOCITY
     ));
-    store.dispatch(actions.addPacketAction(packet));
+    if (store.getState().settings.connected) store.dispatch(actions.addPacketAction(packet));
 
     /*derivations */
     const relAlt = altitudePressure(PRESSURE);
@@ -29,7 +33,9 @@ export const addPacket = packet => {
     store.dispatch(actions.addGpsPressAction(pressureAltitude(ALTITUDE)));
     store.dispatch(actions.updateEst(estimateLanding(relAlt, VELOCITY)));
     store.dispatch(actions.addWindVel(framedAcc[0], framedAcc[1]));
-    store.dispatch(actions.addCompassAction(getAngle([X_MAGNETIC_FIELD,Y_MAGNETIC_FIELD,Z_MAGNETIC_FIELD], [1,0,0])));
+    store.dispatch(actions.addCompassAction(getAngle([Number(X_MAGNETIC_FIELD),Number(Y_MAGNETIC_FIELD),Number(Z_MAGNETIC_FIELD)], [1,0,0])));
+
+    // store.dispatch(actions.setPresAction(CAL_PRESS));
 };
 
 export const calibrate = packet => {
@@ -66,12 +72,29 @@ export const frameAcceleration = (acceleration, rotation, magfield) => {
 
 
 /* obscure math */
-const getAngle = (v1, v2) => Math.acos(dotProduct(normalize(v1), normalize(v2))/vectorLength(v1)/vectorLength(v2));
+const getAngle = (v1, v2) => {
+    let dp = dotProduct(normalize(v1), normalize(v2));
+    v1 = vectorLength(v1);
+    v2 = vectorLength(v2);
+    console.log(v1,v2);
+    let b = dp/(v1 * v2);
+    let res = Math.acos(b);
+    console.log(b, dp, res);
+    return res;
+}
+
+export const getSide = (angle) => {
+    if (angle >= 315 || angle < 45) return 'N';
+    else if (angle >= 45 && angle < 135) return 'E';
+    else if (angle >= 135 && angle < 225) return 'S';
+    else if (angle >= 225 && angle < 315) return 'W';
+    else return 'FU';
+};
 
 const dotProduct = (v1, v2) => {
-    let v3 = [];
+    let v3 = 0;
     for (let i = 0; i < v1.length; i++) {
-        v3.push(v1[i] * v2[i]);
+        v3 += (v1[i] * v2[i]);
     }
     return v3;
 };
@@ -113,13 +136,14 @@ const randomVector = d => {
 const flatten = arr => [].concat.apply([], arr);
 
 const crossProduct = (...sets) =>
+    //TODO: fix
     sets.reduce((acc, set) =>
         flatten(acc.map(x => set.map(y => [...x, y]))),
         [[]]);
 
 
 /* Velocity calculation */
-export const getVelocity = (distance, time) => distance / time;
+export const getVelocity = (distance, time) => distance / (time||1);
 
 export const calculateAltVelocity = (cAlt, lAlt, cTime, lTime) => {
     let dist = Math.abs(cAlt - lAlt);
@@ -176,6 +200,7 @@ export const bufferToPacket = buffer => {
             `${buffer.readInt16LE(44)},`+ // xmag
             `${buffer.readInt16LE(46)},`+ // ymag
             `${buffer.readInt16LE(48)}`; // zmag
+            // `${buffer.readFloatLE(52)}`; // colPress
 };
 
 export const requireNumber = (value, name) => { if ((!value && value !== 0) || isNaN(value)) throw new TypeError(`${name} (${value}) must be convertable to a number`); };
