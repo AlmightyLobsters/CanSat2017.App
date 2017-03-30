@@ -46,7 +46,8 @@ const initialState = {
             accs: [],
             altts: [],
             press: []
-        }
+        },
+        packets: []
     },
     settings: {
         autoconnect: true,

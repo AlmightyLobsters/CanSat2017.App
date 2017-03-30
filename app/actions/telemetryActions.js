@@ -77,3 +77,8 @@ export const addVelAction = (accelerationVelocity, altitudeVelocity, pressureVel
         pressureVelocity
     }
 });
+
+export const addPacketAction = packet => ({
+    type: types.ADD_PACKET,
+    payload: packet
+});

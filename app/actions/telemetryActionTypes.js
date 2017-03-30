@@ -6,3 +6,4 @@ export const ADD_ACC = 'ADD_ACC';
 export const ADD_ROT = 'ADD_ROT';
 export const ADD_MAG = 'ADD_MAG';
 export const ADD_VEL = 'ADD_VEL';
+export const ADD_PACKET = 'ADD_PACKET';

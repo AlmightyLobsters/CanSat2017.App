@@ -19,6 +19,7 @@ export const addPacket = packet => {
         calculateAltVelocity(ALTITUDE, store.getState().telemetry.gps.altts),
         VELOCITY
     ));
+    store.dispatch(actions.addPacketAction(packet));
 
     /*derivations */
     const relAlt = altitudePressure(PRESSURE);
@@ -47,6 +48,12 @@ export const calibrate = packet => {
 };
 
 
+/* Magnetometer */
+const getDirection = (magfield, calMagfield) => {
+    let angle = getAngle(magfield, calMagfield);
+};
+
+
 /* frame it nice */
 export const frameAcceleration = (acceleration, rotation, magfield) => {
     if (acceleration.length !== rotation.length) throw new Error('The dimension of acceleration does not correspond to the one of rotation');
@@ -64,6 +71,15 @@ export const frameAcceleration = (acceleration, rotation, magfield) => {
 
 
 /* obscure math */
+const getAngle = (v1, v2) => Math.acos(dotProduct(normalize(v1), normalize(v2))/vectorLength(v1)/vectorLength(v2));
+
+const dotProduct = (v1, v2) => {
+    let v3 = [];
+    for (let i = 0; i < v1.length; i++) {
+        v3.push(v1[i] * v2[i]);
+    }
+    return v3;
+};
 
 const matMult = (a, b) => {
     var aNumRows = a.length, aNumCols = a[0].length,
@@ -94,11 +110,10 @@ const normalize = v => v.map(e => e / vectorLength(v));
 const vectorLength = v => Math.sqrt(v.reduce((acc, val) => acc + (val ** 2) , 0));
 
 const randomVector = d => {
-    //TODO: add perpendicularity check
     let arr = [];
     for (let i = 0; i < d; d++) arr[i] = Math.random();
     return arr;
-}
+};
 
 const flatten = arr => [].concat.apply([], arr);
 

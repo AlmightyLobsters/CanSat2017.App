@@ -122,6 +122,12 @@ const velReducer = (state = {accs: [], altts: [], press: []}, action) => {
     return state;
 };
 
+const packetReducer = (state = [], action) => {
+    if (action && action.type === types.ADD_PACKET) {
+        return state.concat(action.payload);
+    }
+};
+
 export default combineReducers({
     times: timeReducer,
     primary: primReducer,
@@ -130,5 +136,6 @@ export default combineReducers({
     acc: accReducer,
     rot: rotReducer,
     mag: magReducer,
-    vel: velReducer
+    vel: velReducer,
+    packets: packetReducer
 });
