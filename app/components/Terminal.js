@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const Terminal = _ => (
+const Terminal = packets => (
     <div id="terminal">
-        <h1>Terminal</h1>
+        {packets}
     </div>
 );
 
 export default connect(store => ({
-
+    packets: store.telemetry.packets
 }))(Terminal);
