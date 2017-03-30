@@ -8,7 +8,7 @@ export const addPacket = packet => {
     const [TIME,TEMPERATURE,PRESSURE,HUMIDITY,LATITUDE,LATITUDE_ORIENTATION,LONGITUDE,LONGITUDE_ORIENTATION,ALTITUDE,RSSI,BATTERY_VOLTAGE,VELOCITY,X_ACCELERATION,Y_ACCELERATION,Z_ACCELERATION,X_ROTATION,Y_ROTATION,Z_ROTATION,X_MAGNETIC_FIELD,Y_MAGNETIC_FIELD,Z_MAGNETIC_FIELD] = packet.split(',');
     /* telemetry */
     store.dispatch(actions.addTimeAction(TIME));
-    store.dispatch(actions.addPrimAction(TEMPERATURE, PRESSURE, HUMIDITY));
+    store.dispatch(actions.addPrimAction(TEMPERATURE/100, PRESSURE/10, HUMIDITY/100));
     store.dispatch(actions.addGpsAction(LATITUDE, LATITUDE_ORIENTATION, LONGITUDE, LONGITUDE_ORIENTATION, ALTITUDE));
     store.dispatch(actions.addStatsAction(RSSI, getBatteryLvl(BATTERY_VOLTAGE)));
     store.dispatch(actions.addAccAction(X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION));
@@ -146,7 +146,7 @@ export const getBatteryLvl = (voltage) => voltage;
 export const bufferToPacket = buffer => {
     if(typeof buffer !== 'object' || !Buffer.isBuffer(buffer)) throw new TypeError('Buffer has to be of type buffer');
     return  `${buffer.readFloatLE(8)},`+ // time
-            `${buffer.readUInt16LE(2)},`+ // temp
+            `${buffer.readInt16LE(2)},`+ // temp
             `${buffer.readUInt16LE(4)},`+ // pres
             `${buffer.readUInt16LE(6)},`+ // hmdt
             `${buffer.readFloatLE(12)},`+ // lat
