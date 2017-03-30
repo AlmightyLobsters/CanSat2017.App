@@ -16,7 +16,7 @@ export const addPacket = packet => {
     store.dispatch(actions.addMagAction(X_MAGNETIC_FIELD, Y_MAGNETIC_FIELD, Z_MAGNETIC_FIELD));
     store.dispatch(actions.addVelAction(
         calculateAccVelocity(X_ACCELERATION, Y_ACCELERATION, Z_ACCELERATION, X_ROTATION, Y_ROTATION, Z_ROTATION, store.getState().telemetry.vel.accs),
-        calculateAltVelocity(ALTITUDE, store.getState().telemetry.gps.altts),
+        calculateAltVelocity(ALTITUDE, store.getState().telemetry.gps.altts.slice(-1), TIME, store.getState().telemetry.times.slice(-1)),
         VELOCITY
     ));
 
@@ -111,22 +111,16 @@ const crossProduct = (...sets) =>
 /* Velocity calculation */
 export const getVelocity = (distance, time) => distance / time;
 
+export const calculateAltVelocity = (cAlt, lAlt, cTime, lTime) => {
+    let dist = Math.abs(cAlt - lAlt);
+    let time = Math.abs(cTime - lTime);
+    return getVelocity(dist, time);
+};
+
 export const calculateAccVelocity = (accY, prevVel) => {
     //TODO: Part two of Max's magic
     return prevVel + accY; // this will be so off track if don't do some mean thing to it
 };
-
-//TODO: Proper algorithm
-export const calculateAltVelocity = (altitude, altitudes) => altitude - (altitudes[altitudes.length - 1] || 111);
-
-// //TODO: Make space for eventual packet loss where the time interval would not be 1s
-// export const calculatePressVelocity = (pressure, pressures) => {
-//     let standardPressure = 1013.25;
-//     //TODO: Substitute magic numbers for named constants
-//     const altFromPresNow = (1 - (pressure / standardPressure) ** 0.190284) * 145366.45 * 0.3048;
-//     const altFromPresBefore = (1 - ((pressures[pressures.length - 1] || 1000) / standardPressure) ** 0.190284) * 145366.45 * 0.3048;
-//     return altFromPresNow - altFromPresBefore;
-// };
 
 
 /* Barometric constants and functions */
@@ -146,8 +140,6 @@ export const pressureAltitude = altitude => P0 * Math.exp(- g * M * altitude / R
 export const estimateLanding = (altitude, velocity) => altitude / velocity;
 
 export const getBatteryLvl = (voltage) => voltage;
-
-export const getWindVelocity = (x, y) => vectorLength(addVectors(x, y));
 
 
 /* Packet management */
@@ -180,6 +172,12 @@ export const requireNumber = (value, name) => { if ((!value && value !== 0) || i
 export const requireBelongs = (value = '', str = '', name) => { if (!value || str.toUpperCase().indexOf(value.toUpperCase()) === -1) throw new TypeError(`${name} (${value}) must belong to ` + str.split('').join('|')); };
 
 
+/* Weather forecast */
+export const getWeatherState = (cur, sup) => Math.sign(cur-sup);
+
+export const getWindVelocity = (x, y) => vectorLength(addVectors(x, y));
+
+
 /* Serial connection */
 const serialConnect = ports => {
     if (ports.length === 1) {
@@ -206,7 +204,8 @@ export const serialCommunicate = force => {
         if (err) throw err;
         if (store.getState().settings.autoconnect || force) {
             serialConnect(ports).on('data', (data) => {
-                addPacket(bufferToPacket(data));
+                let packet = bufferToPacket(data);
+                addPacket(packet);
             }).on('error', err => {
                 store.dispatch(changeConnectAction(false));
                 throw err;
