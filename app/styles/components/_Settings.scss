@@ -1,3 +1,23 @@
 #settings {
-    
+
+    padding: 5px;
+
+    #controls > div {
+        display: block;
+        margin: 10px;
+        font-size: 20px;
+
+        label {
+            margin: 20px;
+        }
+
+    }
+
+    .autoconnect {
+
+    }
+
+    .serverUrl {
+
+    }
 }

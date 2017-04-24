@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const Gallery = _ => (
+const Gallery = ({ route: { images } }) => (
     <div id="gallery">
-        <h1>Gallery</h1>
-        <p style={{fontSize: '7em'}}>Coming soon...</p>
+        <h1 style={{marginLeft: '12px'}}>Gallery</h1>
+        {images.map((imageName, index) => <img key={index} src={`./resources/images/gallery/${imageName}`} />)}
     </div>
 );
 

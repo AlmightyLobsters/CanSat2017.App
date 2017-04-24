@@ -1,4 +1,13 @@
 #sidebar {
+
+    #packetCount {
+        background: green;
+        padding: 4px;
+        padding-bottom: 7px;
+        border-radius: 25%;
+        color: white;
+    }
+
     background-color: #DDD;
     opacity: 0.9;
     position: fixed;

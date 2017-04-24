@@ -14,3 +14,8 @@ export const changeAutoconnectAction = autoconnect => ({
     type: types.CHANGE_AUTOCONNECT,
     payload: autoconnect
 });
+
+export const changeServerUrl = serverUrl => ({
+    type: types.CHANGE_SERVER_URL,
+    payload: serverUrl
+});

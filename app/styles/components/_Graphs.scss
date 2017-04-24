@@ -1,6 +1,6 @@
 #graphs {
     div.c3 {
-        height: 33%;
+        height: 28%;
         display: inline-block;
 
         &.col-1-1 {
@@ -11,5 +11,14 @@
             width: 50%;
         }
 
+    }
+
+    @media (max-width: 720px)
+    {
+        div.c3 {
+            height: 33%;
+            display: inline-block;
+            width: 100% !important;
+        }
     }
 }

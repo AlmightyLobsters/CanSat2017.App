@@ -1,3 +1,4 @@
 export const CHANGE_CONNECT = 'CHANGE_CONNECT';
 export const ADD_COM = 'ADD_COM';
 export const CHANGE_AUTOCONNECT = 'CHANGE_AUTOCONNECT';
+export const CHANGE_SERVER_URL = 'CHANGE_SERVER_URL';

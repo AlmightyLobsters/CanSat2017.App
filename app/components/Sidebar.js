@@ -9,12 +9,12 @@ const toggleSidepanel = () => {
 
 const activeIf = (value, assumption) => value === assumption ? ' active' : '';
 
-const Sidebar = ({location}) => (
+const Sidebar = ({location, packetCount}) => (
     <div id="sidebar" className="expanded">
         <ul className="navbar">
             <section className="top">
                 <li>
-                    <a style={{fontFamily: 'Novecento Bold'}} onClick={e => {toggleSidepanel();}}><i className="fa fa-bars fa-fw fa-2x"></i><label>Marigold</label></a>
+                    <a style={{fontFamily: 'Novecento Bold'}} onClick={e => {toggleSidepanel();}}><i className="fa fa-bars fa-fw fa-2x"></i><label>Marigold <span id="packetCount">{packetCount}</span></label></a>
                 </li>
             </section>
             <section className="core">
@@ -44,5 +44,6 @@ const Sidebar = ({location}) => (
 );
 
 export default connect(store => ({
-    location: store.routing.locationBeforeTransitions.pathname
+    location: store.routing.locationBeforeTransitions.pathname,
+    packetCount: store.telemetry.times.length
 }))(Sidebar);

@@ -54,7 +54,8 @@ const initialState = {
     settings: {
         autoconnect: true,
         connected: null,
-        coms: []
+        coms: [],
+        serverUrl: 'http://lobsters.tech'
     },
     calculatedValues: {
         relAlts: [],

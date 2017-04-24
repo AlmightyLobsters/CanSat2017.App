@@ -17,7 +17,9 @@ const exportData = (e) => {
 const Terminal = ({packets}) => (
     <div id="terminal">
         <button onClick={exportData.bind(this)}>Export</button>
-        {packets.map((packet, index) => <p key={index}>{packet}</p>)}
+        <div id="raw">
+            {packets.map((packet, index) => <p key={index}>{packet}</p>)}
+        </div>
     </div>
 );
 

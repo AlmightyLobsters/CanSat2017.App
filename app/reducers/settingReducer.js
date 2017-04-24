@@ -22,8 +22,16 @@ const changeAutoconnectReducer = (state = true, action) => {
     return state;
 };
 
+const changeServerUrlReducer = (state = 'http://lobsters.tech', action) => {
+    if (action && action.type === types.CHANGE_SERVER_URL) {
+        return action.payload;
+    }
+    return state;
+};
+
 export default combineReducers({
     connected: changeConnectReducer,
     coms: portReducer,
-    autoconnect: changeAutoconnectReducer
+    autoconnect: changeAutoconnectReducer,
+    serverUrl: changeServerUrlReducer
 });

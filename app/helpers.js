@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as telemetryActions from './actions/telemetryActions';
 import * as settingsActions from './actions/settingActions';
 import * as calculatedActions from './actions/calculatedActions';
@@ -9,9 +10,15 @@ import { changeConnectAction, portAction } from './actions/settingActions';
 
 export const addPacket = packet => {
     if (typeof packet !== 'string') throw new TypeError('Packet must be of type string');
+    let serverUrl = store.getState().settings.serverUrl;
+    while(serverUrl[serverUrl.length - 1] === '/')
+        serverUrl = serverUrl.substring(0, serverUrl.length - 1);
+    axios.post(serverUrl + '/api/data/upload', {
+        data: packet
+    });
     const [TIME,TEMPERATURE,PRESSURE,HUMIDITY,LATITUDE,LATITUDE_ORIENTATION,LONGITUDE,LONGITUDE_ORIENTATION,ALTITUDE,RSSI,BATTERY_VOLTAGE,VELOCITY,X_ACCELERATION,Y_ACCELERATION,Z_ACCELERATION,X_ROTATION,Y_ROTATION,Z_ROTATION,X_MAGNETIC_FIELD,Y_MAGNETIC_FIELD,Z_MAGNETIC_FIELD] = packet.split(',');
     /* telemetry */
-    store.dispatch(actions.addTimeAction(TIME));
+    store.dispatch(actions.addTimeAction(new Date()));
     store.dispatch(actions.addPrimAction(TEMPERATURE/100, PRESSURE/10, HUMIDITY/100));
     store.dispatch(actions.addGpsAction(LATITUDE, LATITUDE_ORIENTATION, LONGITUDE, LONGITUDE_ORIENTATION, ALTITUDE));
     store.dispatch(actions.addStatsAction(RSSI, getBatteryLvl(BATTERY_VOLTAGE)));
@@ -223,7 +230,7 @@ const serialConnect = ports => {
         return port;
     }
     else {
-        reconnect();
+        //reconnect();
     }
 };
 
